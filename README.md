@@ -1,5 +1,5 @@
 # 481-Capstone
-Capstone project for CPSC 481: Artificial Intelligence. 
+Capstone project for CPSC 481: Artificial Intelligence. This project follows the implementation of a Rubix Cube...
 
 ## Team Members 
 - Christian Carrillo
