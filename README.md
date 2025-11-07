@@ -1,5 +1,6 @@
-# 481-Capstone
-Capstone project for CPSC 481: Artificial Intelligence. This project follows the implementation of a Rubix Cube...
+# 481-Capstone: Brief Description
+Rubix Tutor is a program used to solve and recommend valuable moves for a 3x3x3 Rubix cube using a set algorithm. States such as U, D, L, R, F, and B will be defined and stored locally. This project focuses on defining and manipulating cube states with the assistance of libraries such as NumPy and Matplotlib in order to express the cube states visually. Efficient moves are recommended to the player as the player progresses through the puzzle. 
+
 
 ## Team Members 
 - Christian Carrillo
