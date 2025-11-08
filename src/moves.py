@@ -1,0 +1,1 @@
+# Generate the possible moves (U, D, L, R, F, B)
