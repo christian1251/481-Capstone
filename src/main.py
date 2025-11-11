@@ -1,12 +1,17 @@
 # Entry point
 from cube_state import CubeState
+from gui import Renderer
 
 def main():
     print("hello world")
-     
+
     cube = CubeState()
-    
+
     cube.print_cube()
+    
+    graphics = Renderer(cube)
+    graphics.render_cube()
+    
 
 if __name__ == "__main__":
     main()

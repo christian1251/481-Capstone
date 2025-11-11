@@ -10,6 +10,8 @@ class CubeState:
         0 : "RED", 1 : "WHITE", 2 : "BLUE", 3 : "GREEN", 4 : "YELLOW", 5 : "ORANGE"
     }
     
+    colors = ['#ff0000', '#ffffff', '#0000ff', '#00ff00', "#FFF700", "#ff7700"] # For matplot3d rendering
+    
     def __init__(self):
         """ 
         Intiialize solved cube with 8 bit int for memory efficiency
