@@ -33,7 +33,7 @@ class Renderer:
         
         # TODO: Make this properly display each cube in the Rubiks Cube
         for i, (z, zdir) in enumerate(product([-2, 2], ['x', 'y', 'z'])):
-            side = Rectangle((-2, -2), 4, 4, facecolor=self.cube.colors[i])
+            side = Rectangle((-2, -2), 4, 4, facecolor=self.cube.HEX_COLOR[i])
             ax.add_patch(side)
             art3d.pathpatch_2d_to_3d(side, z=z, zdir=zdir)
             
