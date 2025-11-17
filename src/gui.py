@@ -10,6 +10,7 @@ from matplotlib.patches import Rectangle, Circle, PathPatch
 
 class Renderer:
     
+    
     def __init__(self, cube):
         self.cube = cube
         
@@ -32,8 +33,14 @@ class Renderer:
                 
         
         # TODO: Make this properly display each cube in the Rubiks Cube
+        face_mapping = [3, 5, 1, 2, 4, 0]  # Maps product index to cube face index
+        
         for i, (z, zdir) in enumerate(product([-2, 2], ['x', 'y', 'z'])):
-            side = Rectangle((-2, -2), 4, 4, facecolor=self.cube.HEX_COLOR[i])
+            face_idx = face_mapping[i]
+            side = Rectangle((-2, -2), 4, 4, 
+                           facecolor=self.cube.HEX_COLOR[face_idx],
+                           edgecolor='black',
+                           linewidth=1)
             ax.add_patch(side)
             art3d.pathpatch_2d_to_3d(side, z=z, zdir=zdir)
             
