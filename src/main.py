@@ -1,12 +1,14 @@
 # Entry point
 from cube_state import CubeState
+import moves
 from gui import Renderer
 
 def main():
     print("hello world")
 
     cube = CubeState()
-
+    
+    # moves.U(cube)
     cube.print_cube()
     
     graphics = Renderer(cube)

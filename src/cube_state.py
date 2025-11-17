@@ -45,12 +45,12 @@ class CubeState:
         """Print unfolded representation of cube"""
 
         faces = self.get_faces()
+
         # Print U face
         for row in faces['U']:
             print('      ', ' '.join(str(cell) for cell in row))
         print()
 
-        # Print L, F, R, B faces side by side
         for i in range(3):
             print(
                 ' '.join(str(cell) for cell in faces['L'][i]),
