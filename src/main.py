@@ -8,9 +8,9 @@ def main():
 
     cube = CubeState()
     
-    # moves.U(cube)
+   
+
     cube.print_cube()
-    
     graphics = Renderer(cube)
     graphics.render_cube()
     
