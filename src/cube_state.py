@@ -63,3 +63,34 @@ class CubeState:
         # Print D face
         for row in faces['D']:
             print('      ', ' '.join(str(cell) for cell in row))
+
+    
+    def face_slices(self):
+        return {
+            'U': self.state[0:9],
+            'D': self.state[9:18],
+            'R': self.state[18:27],
+            'L': self.state[27:36],
+            'F': self.state[36:45],
+            'B': self.state[45:54],
+        } 
+        
+        
+    def is_solved(self):
+        faces = self.face_slices()
+        solved = True
+        issues = []
+        
+        for face, values in faces.items():
+            face_set = set(values)
+            if (len(face_set) > 1):
+                issues.append(face)
+                solved = False
+                
+        if not solved:
+            print(f"---NOT SOLVED---\nUnsolved Faces: {issues}")
+        else:
+            print("Cube Solved")
+            
+
+        return solved
