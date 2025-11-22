@@ -10,13 +10,8 @@ def main():
     
     cube.is_solved()
     cube.print_cube()
-    moves.U(cube)
-    cube.is_solved()
-    # # cube.print_cube()
-    # # moves.U_prime(cube)
-    # # cube.print_cube()
-    # graphics = Renderer(cube)
-    # graphics.render_cube()
+    graphics = Renderer(cube)
+    graphics.render_cube()
     
 
 if __name__ == "__main__":
