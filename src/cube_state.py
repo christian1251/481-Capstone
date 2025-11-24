@@ -26,6 +26,8 @@ class CubeState:
         self.state = np.array([i for i in range(6)
                               for _ in range(9)], dtype=np.int8)
 
+        self.corner_orient = [0] * 8
+
     def __repr__(self):
         return f"CubeState({self.state.tolist()})"
 
@@ -94,3 +96,4 @@ class CubeState:
             
 
         return solved
+

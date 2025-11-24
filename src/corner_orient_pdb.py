@@ -137,6 +137,38 @@ def build_corner_move_table() -> Dict[str, CornerMove]:
     return moves
 
 
+def build_corner_orient_pdb() -> List[int]:
+    """
+    Build the corner-orientation PDB as a list of length NUM_STATES.
+    pdb[code] = minimum number of moves to orient all corners 
+    Uses bfs
+    """
+    moves = build_corner_move_table()
 
+    # Initialize PDB with -1 = unknown
+    pdb = [-1] * NUM_STATES
+
+    # Start from the solved orientation: all corners orientation 0
+    solved_orient = [0] * 8
+    root_code = encode_corner_orient(solved_orient)
+    pdb[root_code] = 0
+
+    queue = deque([root_code])
+
+    while queue:
+        code = queue.popleft()
+        orient = decode_corner_orient(code)
+        depth = pdb[code]
+
+        # Expand all moves
+        for move_name, move_func in moves.items():
+            new_orient = move_func(orient)
+            new_code = encode_corner_orient(new_orient)
+
+            if pdb[new_code] == -1:
+                pdb[new_code] = depth + 1
+                queue.append(new_code)
+
+    return pdb
 
 
