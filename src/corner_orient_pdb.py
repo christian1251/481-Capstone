@@ -39,7 +39,7 @@ def decode_corner_orient(code: int) -> List[int]:
     Inverse of the encoding function
     '''
 
-    assert 0 <= code <= NUM_STATES
+    assert 0 <= code < NUM_STATES
     decoded = [0] * 8 
     
     for i in range(6, -1, -1):
@@ -48,6 +48,94 @@ def decode_corner_orient(code: int) -> List[int]:
 
     decoded[7] = (-sum(decoded[:7])) % 3
     return decoded
+
+
+
+
+CornerMove = Callable[[List[int]], List[int]]
+
+
+def make_move_function(perm: List[int], twist: List[int]) -> CornerMove:
+    """
+    perm[i] = index of corner that moves into position i.
+    twist[i] = how much to ADD (mod 3) to the orientation of the corner
+               that ends up in position i.
+    """
+    assert len(perm) == 8 and len(twist) == 8
+
+    def move_func(orient: List[int]) -> List[int]:
+        new = [0] * 8
+        for i in range(8):
+            c_from = perm[i]
+            new[i] = (orient[c_from] + twist[i]) % 3
+        return new
+
+    return move_func
+
+
+def build_corner_move_table() -> Dict[str, CornerMove]:
+    """
+    Return a dict mapping move names to functions that update corner orientation.
+    """
+
+    moves: Dict[str, CornerMove] = {}
+
+    # Example: U / U' (Up face quarter turns)
+    # U move cycles the 4 top-layer corners, but DOES NOT change their orientation.
+    # Using corner indices [0,1,2,3] = [UFR, URB, UBL, ULF] as an example.
+    U_perm  = [1, 2, 3, 0, 4, 5, 6, 7]   # positions 0..3 get cycled
+    U_twist = [0] * 8                    # no twist change
+    moves["U"] = make_move_function(U_perm, U_twist)
+
+    # U' is the inverse cycle
+    Uprime_perm  = [3, 0, 1, 2, 4, 5, 6, 7]
+    Uprime_twist = [0] * 8
+    moves["U'"] = make_move_function(Uprime_perm, Uprime_twist)
+
+    # D / D' similarly: bottom layer corners cycle, no orientation change.
+    D_perm  = [0, 1, 2, 3, 5, 6, 7, 4]
+    D_twist = [0] * 8
+    moves["D"] = make_move_function(D_perm, D_twist)
+
+    Dprime_perm  = [0, 1, 2, 3, 7, 4, 5, 6]
+    Dprime_twist = [0] * 8
+    moves["D'"] = make_move_function(Dprime_perm, Dprime_twist)
+
+
+    R_perm  = [3, 1, 2, 7, 0, 5, 6, 4]
+    R_twist = [2, 0, 0, 1, 1, 0, 0, 2]
+    moves["R"]  = make_move_function(R_perm, R_twist)
+    
+    Rprime_perm =  [4, 1, 2, 0, 7, 5, 6, 3]
+    Rprime_twist = [1, 0, 0, 2, 2, 0, 0, 1]
+    moves["R'"] = make_move_function(Rprime_perm, Rprime_twist)
+
+    L_perm = [0, 5, 1, 3, 4, 6, 2, 7]
+    L_twist = [0, 1, 2, 0, 0, 2, 1, 0]
+    moves["L"]  = make_move_function(L_perm, L_twist)
+    
+    Lprime_perm = [0, 2, 6, 3, 4, 1, 5, 7]
+    Lprime_twist = [0, 2, 1, 0, 0, 1, 2, 0]
+    moves["L'"] = make_move_function(Lprime_perm, Lprime_twist)
+
+    F_perm = [1, 5, 2, 3, 0, 4, 6, 7]
+    F_twist = [1, 2, 0, 0, 2, 1, 0, 0]
+    moves["F"]  = make_move_function(F_perm, F_twist)
+
+    Fprime_perm = [4, 0, 2, 3, 5, 1, 6, 7]
+    Fprime_twist = [2, 1, 0, 0, 1, 2, 0, 0]
+    moves["F'"] = make_move_function(Fprime_perm, Fprime_twist)
+
+    B_perm = [0, 1, 6, 2, 4, 5, 7, 3]
+    B_twist = [0, 0, 1, 2, 0, 0, 2, 1]
+    moves["B"]  = make_move_function(B_perm, B_twist)
+
+    Bprime_perm = [0, 1, 3, 7, 4, 5, 2, 6]
+    Bprime_twist = [0, 0, 2, 1, 0, 0, 1, 2]
+    moves["B'"] = make_move_function(Bprime_perm, Bprime_twist)
+
+    return moves
+
 
 
 
