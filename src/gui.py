@@ -1,5 +1,6 @@
 # Main gui implementation
 
+from matplotlib.widgets import Button
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,6 +8,7 @@ from itertools import product, combinations
 import mpl_toolkits.mplot3d.art3d as art3d
 from cube_state import CubeState
 from matplotlib.patches import Rectangle, Circle, PathPatch
+import moves
 
 class Renderer:
     
@@ -75,5 +77,10 @@ class Renderer:
         # draw each face
         for face_key, vectors in face_vectors.items():
             draw_face(face_key, *vectors)
+            
+        axes = plt.axes([0.81, 0.000001, 0.1, 0.075])
+        bnext = Button(axes, 'U')
+        bnext.on_clicked(moves.U(self.cube))
+        plt.show()
             
         plt.show()
