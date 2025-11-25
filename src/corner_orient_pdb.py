@@ -14,6 +14,17 @@ PDB_FILENAME = "corner_orient.pdb"
 NUM_STATES = 3 ** 7 
 
 
+CORNER_STICKERS = [
+    [  2, 18, 38 ],   # URF
+    [  0, 36, 29 ],   # UFL
+    [  6, 27, 47 ],   # ULB
+    [  8, 45, 20 ],   # UBR
+    [ 11, 44, 26 ],   # DFR
+    [  9, 35, 42 ],   # DLF
+    [ 15, 53, 33 ],   # DBL
+    [ 17, 24, 51 ],   # DRB
+]
+
 def encode_corner_orient(orient: List[int]) -> int:
     '''
     Encode the orientation of the corners into a base 3 int (0-3^7)
@@ -187,8 +198,24 @@ def load_pdb(filename: str = PDB_FILENAME) -> List[int]:
 
 
 # Hueristic wrapper
-def get_corner_orient_from_cube(cube) -> List[int]:
-    return cube.corner_orient
+def get_corner_orient_from_cube(cube):
+    orient = [0]*8
+
+    for corner_idx, stickers in enumerate(CORNER_STICKERS):
+        ref = stickers[0]           # index of reference sticker
+        ref_color = cube.state[ref] # actual color currently on that sticker
+
+        # What face is this sticker sitting on
+        # Determine by which center color it matches.
+
+        if ref_color == cube.WHITE or ref_color == cube.YELLOW:
+            orient[corner_idx] = 0
+        elif ref_color == cube.RED or ref_color == cube.ORANGE:
+            orient[corner_idx] = 1
+        else:  # GREEN or BLUE
+            orient[corner_idx] = 2
+
+    return orient
 
 
 def pdb_heuristic(cube, pdb: List[int]) -> int:

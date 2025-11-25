@@ -1,6 +1,9 @@
 # Generate the possible moves (U, D, L, R, F, B, U', D', L', R', F', B'. No wide moves / slice moves for now due to notation.)
 from cube_state import CubeState
 import numpy as np
+from corner_orient_pdb import build_corner_move_table
+
+_corner_moves = build_corner_move_table()
 
 # U = 0:9, D = 9:18, R = 18:27, L = 27:36, F = 36:45, B = 45:54
 
@@ -22,6 +25,9 @@ def U(cube):
     cube.state[45:48] = cube.state[27:30]
     cube.state[27:30] = temp
 
+    cube.corner_orient = _corner_moves["U"](cube.corner_orient)
+
+
     # Reshape back into state
 
 
@@ -37,6 +43,8 @@ def U_prime(cube):
     cube.state[45:48] = cube.state[18:21]
     cube.state[18:21] = temp
 
+    cube.corner_orient = _corner_moves["U'"](cube.corner_orient)
+
 
 # ------------------- D -------------------
 def D(cube):
@@ -51,6 +59,7 @@ def D(cube):
     cube.state[48:51] = cube.state[24:27]  # B = R
     cube.state[24:27] = temp  # R = old F
 
+    cube.corner_orient = _corner_moves["D"](cube.corner_orient)
 
 def D_prime(cube):
     faces = cube.get_faces()
@@ -64,7 +73,7 @@ def D_prime(cube):
     cube.state[48:51] = cube.state[33:36]
     cube.state[33:36] = temp
 
-
+    cube.corner_orient = _corner_moves["D'"](cube.corner_orient)
 # ------------------- L -------------------
 def L(cube):
     faces = cube.get_faces()
@@ -77,7 +86,7 @@ def L(cube):
     cube.state[45:54:3] = cube.state[9:18:3]  # B = D
     cube.state[9:18:3] = cube.state[36:45:3]  # D = F
     cube.state[36:45:3] = temp  # F = old U
-
+    cube.corner_orient = _corner_moves["L"](cube.corner_orient)
 
 def L_prime(cube):
     faces = cube.get_faces()
@@ -91,7 +100,7 @@ def L_prime(cube):
     cube.state[9:18:3] = cube.state[45:54:3]
     cube.state[45:54:3] = temp
 
-
+    cube.corner_orient = _corner_moves["L'"](cube.corner_orient)
 # ------------------- R -------------------
 def R(cube):
     faces = cube.get_faces()
@@ -104,7 +113,7 @@ def R(cube):
     cube.state[36 + 2 : 45 : 3] = cube.state[11:18:3]  # F = D
     cube.state[11:18:3] = cube.state[47:54:3]  # D = B
     cube.state[47:54:3] = temp  # B = old U
-
+    cube.corner_orient = _corner_moves["R"](cube.corner_orient)
 
 def R_prime(cube):
     faces = cube.get_faces()
@@ -117,7 +126,7 @@ def R_prime(cube):
     cube.state[47:54:3] = cube.state[11:18:3]
     cube.state[11:18:3] = cube.state[38:45:3]
     cube.state[38:45:3] = temp
-
+    cube.corner_orient = _corner_moves["R'"](cube.corner_orient)
 
 # ------------------- F -------------------
 def F(cube):
@@ -133,7 +142,7 @@ def F(cube):
     cube.state[27:36:3] = cube.state[9:12]  # L right column = D top row
     cube.state[9:12] = cube.state[18:27:3][::-1]  # D top row = R left column reversed
     cube.state[18:27:3] = temp  # R left column = old U bottom row
-
+    cube.corner_orient = _corner_moves["F"](cube.corner_orient)
 
 def F_prime(cube):
     faces = cube.get_faces()
@@ -146,7 +155,7 @@ def F_prime(cube):
     cube.state[18:27:3] = cube.state[9:12][::-1]  # R left column = D top row reversed
     cube.state[9:12] = cube.state[27:36:3]  # D top row = L right column
     cube.state[27:36:3] = temp[::-1]  # L right column = old U bottom row reversed
-
+    cube.corner_orient = _corner_moves["F'"](cube.corner_orient)
 
 # ------------------- B -------------------
 def B(cube):
@@ -161,6 +170,7 @@ def B(cube):
     cube.state[15:18] = cube.state[27:36:3][::-1]  # D = L left col reversed
     cube.state[27:36:3] = temp  # L = old U
 
+    cube.corner_orient = _corner_moves["B"](cube.corner_orient)
 
 def B_prime(cube):
     faces = cube.get_faces()
@@ -173,3 +183,6 @@ def B_prime(cube):
     cube.state[27:36:3] = cube.state[15:18][::-1]  # L = D bottom row reversed
     cube.state[15:18] = cube.state[18:27:3]  # D = R right col
     cube.state[18:27:3] = temp[::-1]  # R = old U reversed
+    
+    cube.corner_orient = _corner_moves["B'"](cube.corner_orient)
+
