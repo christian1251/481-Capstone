@@ -172,3 +172,34 @@ def build_corner_orient_pdb() -> List[int]:
     return pdb
 
 
+# Save and load pdb
+def save_pdb(pdb: List[int], filename: str = PDB_FILENAME) -> None:
+    with open(filename, "wb") as f:
+        pickle.dump(pdb, f)
+
+def load_pdb(filename: str = PDB_FILENAME) -> List[int]:
+    if not os.path.exists(filename):
+        raise FileNotFoundError(f"PDB File '{filename}' not found. Build it")
+    
+    with open(filename, "rb") as f:
+        return pickle.load(f)
+
+
+
+# Hueristic wrapper
+def get_corner_orient_from_cube(cube) -> List[int]:
+    return cube.corner_orient
+
+
+def pdb_heuristic(cube, pdb: List[int]) -> int:
+    orientation = get_corner_orient_from_cube(cube)
+    code = encode_corner_orient(orientation)
+    return pdb[code]
+
+
+if __name__ == "__main__":
+    print("Building PDB")
+    pdb = build_corner_orient_pdb()
+    save_pdb(pdb)
+    print(f"Done. Saved to {PDB_FILENAME}")
+    
