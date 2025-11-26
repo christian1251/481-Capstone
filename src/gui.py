@@ -23,14 +23,29 @@ class Renderer:
         self._draw_cube(self.ax)
 
         # Buttons
-        axes_btn = plt.axes([0.81, 0.01, 0.1, 0.075])
+        axes_btn = plt.axes([0.80, 0.01, 0.1, 0.075])
         bU = Button(axes_btn, 'U')
         bU.on_clicked(self._on_U)
         
+        axes_btn = plt.axes([0.70, 0.01, 0.1, 0.075])
+        bD = Button(axes_btn, 'D')
+        bD.on_clicked(self._on_D)
+
         axes_btn = plt.axes([0.60, 0.01, 0.1, 0.075])
         bL = Button(axes_btn, 'L')
         bL.on_clicked(self._on_L)
 
+        axes_btn = plt.axes([0.50, 0.01, 0.1, 0.075])
+        bR = Button(axes_btn, 'R')
+        bR.on_clicked(self._on_R)
+
+        axes_btn = plt.axes([0.40, 0.01, 0.1, 0.075])
+        bF = Button(axes_btn, 'F')
+        bF.on_clicked(self._on_F)
+        
+        axes_btn = plt.axes([0.30, 0.01, 0.1, 0.075])
+        bB = Button(axes_btn, 'B')
+        bB.on_clicked(self._on_B)
         plt.show()
 
     # button callbacks
@@ -38,9 +53,24 @@ class Renderer:
         moves.U(self.cube)
         self._redraw()
 
-    # button callbacks
+    def _on_D(self, event):
+        moves.D(self.cube)
+        self._redraw()
+
+    def _on_R(self, event):
+        moves.R(self.cube)
+        self._redraw()
+
     def _on_L(self, event):
         moves.L(self.cube)
+        self._redraw()
+
+    def _on_F(self, event):
+        moves.F(self.cube)
+        self._redraw()
+
+    def _on_B(self, event):
+        moves.B(self.cube)
         self._redraw()
 
     def _redraw(self):
