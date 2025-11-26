@@ -7,80 +7,107 @@ import numpy as np
 from itertools import product, combinations
 import mpl_toolkits.mplot3d.art3d as art3d
 from cube_state import CubeState
-from matplotlib.patches import Rectangle, Circle, PathPatch
 import moves
 
 class Renderer:
-    
-    
     def __init__(self, cube):
         self.cube = cube
+        self.fig = None
+        self.ax = None
+
+    def start(self):
+        """Create env"""
+        self.fig = plt.figure(figsize=(8, 8))
+        self.ax = self.fig.add_subplot(projection='3d')
+
+        self._draw_cube(self.ax)
+
+        # Buttons
+        axes_btn = plt.axes([0.81, 0.01, 0.1, 0.075])
+        bU = Button(axes_btn, 'U')
+        bU.on_clicked(self._on_U)
         
-    def render_cube(self):
-        '''
-        Use Matplotlib3d to display the in 3d
-        '''
-        fig = plt.figure()
-        
-        ax = fig.add_subplot(projection = '3d')
-        
-        ax.set_aspect("auto")
-        ax.set_autoscale_on(True)
-        
-        # Render Camera zoom
-        r = [0, 2]
-        for s, e in combinations(np.array(list(product(r, r, r))), 2):
-            if np.sum(np.abs(s-e)) == r[1]-r[0]:
-                ax.plot3D(*zip(s, e), color="w")
-                
-        
+        axes_btn = plt.axes([0.60, 0.01, 0.1, 0.075])
+        bL = Button(axes_btn, 'L')
+        bL.on_clicked(self._on_L)
+
+        plt.show()
+
+    # button callbacks
+    def _on_U(self, event):
+        moves.U(self.cube)
+        self._redraw()
+
+    # button callbacks
+    def _on_L(self, event):
+        moves.L(self.cube)
+        self._redraw()
+
+    def _redraw(self):
+        """Clear and redraw cube"""
+        self.ax.cla()
+        self._draw_cube(self.ax)
+        self.fig.canvas.draw_idle()
+        self.cube.print_cube()
+
+
+    def _draw_cube(self, ax):
+
         faces = self.cube.get_faces()
 
-        # origin = starting corner of the face
-        # u_vec = direction to move when increasing column index
-        # v_vec  = direction to move when increasing row index 
+        # camera wireframe cube
+        r = [0, 2]
+        for s, e in combinations(np.array(list(product(r, r, r))), 2):
+            if np.sum(np.abs(s - e)) == r[1] - r[0]:
+                ax.plot3D(*zip(s, e), color="w")
+
+        # Face origins and movement vectors
         face_vectors = {
-            # matplot wants floats 
-            'U': (np.array([0, 3, 0], dtype=float), np.array([1, 0, 0], dtype=float), np.array([0, 0, 1], dtype=float)),
-            'D': (np.array([0, 0, 0], dtype=float), np.array([1, 0, 0], dtype=float), np.array([0, 0, 1], dtype=float)),
-            'F': (np.array([0, 0, 3], dtype=float), np.array([1, 0, 0], dtype=float), np.array([0, 1, 0], dtype=float)),
-            'B': (np.array([3, 0, 0], dtype=float), np.array([-1, 0, 0], dtype=float), np.array([0, 1, 0], dtype=float)),
-            'R': (np.array([3, 0, 3], dtype=float), np.array([0, 0, -1], dtype=float), np.array([0, 1, 0], dtype=float)),
-            'L': (np.array([0, 0, 0], dtype=float), np.array([0, 0, 1], dtype=float), np.array([0, 1, 0], dtype=float)),
+            'U': (np.array([0, 3, 0], dtype=float),
+                  np.array([1, 0, 0], dtype=float),
+                  np.array([0, 0, 1], dtype=float)),
+            'D': (np.array([0, 0, 0], dtype=float),
+                  np.array([1, 0, 0], dtype=float),
+                  np.array([0, 0, 1], dtype=float)),
+            'F': (np.array([0, 0, 3], dtype=float),
+                  np.array([1, 0, 0], dtype=float),
+                  np.array([0, 1, 0], dtype=float)),
+            'B': (np.array([3, 0, 0], dtype=float),
+                  np.array([-1, 0, 0], dtype=float),
+                  np.array([0, 1, 0], dtype=float)),
+            'R': (np.array([3, 0, 3], dtype=float),
+                  np.array([0, 0, -1], dtype=float),
+                  np.array([0, 1, 0], dtype=float)),
+            'L': (np.array([0, 0, 0], dtype=float),
+                  np.array([0, 0, 1], dtype=float),
+                  np.array([0, 1, 0], dtype=float)),
         }
 
+        # draw helper
         def draw_face(key, origin, u_vec, v_vec):
-            # 3×3 array of colors for the face
             face = faces[key]
-
             for row in range(3):
                 for col in range(3):
 
-                    # this computes the bottom left coord of the quare
+                    # bottom-left corner of tile
                     base = origin + u_vec * col + v_vec * (2 - row)
 
-                    # 4 vertices of sqaure
-                    square = [base,
+                    square = [
+                        base,
                         base + u_vec,
                         base + u_vec + v_vec,
                         base + v_vec
                     ]
 
-                    # create square
                     poly = art3d.Poly3DCollection([square])
                     poly.set_facecolor(CubeState.HEX_COLOR[face[row, col]])
-                    poly.set_edgecolor("k") 
-
-                    # add tile to the plot
+                    poly.set_edgecolor("k")
                     ax.add_collection3d(poly)
 
-        # draw each face
-        for face_key, vectors in face_vectors.items():
-            draw_face(face_key, *vectors)
-            
-        axes = plt.axes([0.81, 0.000001, 0.1, 0.075])
-        bnext = Button(axes, 'U')
-        bnext.on_clicked(moves.U(self.cube))
-        plt.show()
-            
-        plt.show()
+        # draw all faces
+        for face_key, vecs in face_vectors.items():
+            draw_face(face_key, *vecs)
+
+        # nice camera
+        ax.set_aspect("auto")
+        ax.set_autoscale_on(True)

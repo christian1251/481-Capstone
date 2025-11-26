@@ -11,7 +11,7 @@ def main():
     cube.is_solved()
     cube.print_cube()
     graphics = Renderer(cube)
-    graphics.render_cube()
+    graphics.start()
     
 
 if __name__ == "__main__":
