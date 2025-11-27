@@ -44,7 +44,7 @@ def rank_moves(cube: CubeState) -> dict:
 
 
 if __name__ == "__main__":
-    cube = CubeState()
+    cube = CubeState()  # Fully completed cube
     print("Current heuristic:", combined_heuristic(cube))
     ranking = rank_moves(cube)
     print("Move ranking on solved cube:")
