@@ -1,4 +1,3 @@
-# moves.py — Rubik's Cube face moves
 import numpy as np
 from corner_orient_pdb import build_corner_move_table
 
