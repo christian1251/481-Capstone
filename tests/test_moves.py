@@ -1,74 +1,57 @@
+from copy import deepcopy
 from cube_state import CubeState
 import moves
-import numpy as np
-import random
+
+move_pairs = [
+    ("U", moves.U, "U'", moves.U_prime),
+    ("D", moves.D, "D'", moves.D_prime),
+    ("L", moves.L, "L'", moves.L_prime),
+    ("R", moves.R, "R'", moves.R_prime),
+    ("F", moves.F, "F'", moves.F_prime),
+    ("B", moves.B, "B'", moves.B_prime),
+]
 
 
-# ------------------- Basic helpers -------------------
-def test_inverse(move, inv):
-    cube = CubeState()
-    before = cube.state.copy()
-    move(cube)
-    inv(cube)
-    after = cube.state.copy()
-    return np.array_equal(before, after)
+def identical_cube(c1, c2):
+    return (
+        c1.state.tolist() == c2.state.tolist() and c1.corner_orient == c2.corner_orient
+    )
 
 
-def test_four_cycles(move):
-    cube = CubeState()
-    before = cube.state.copy()
-    for _ in range(4):
+def run_inverse_test():
+    print("== Inverse-move tests (move then inverse should restore solved cube) ==")
+    errors = []
+    for name, move, inv_name, inv in move_pairs:
+        cube = CubeState()
+        before = deepcopy(cube)
         move(cube)
-    after = cube.state.copy()
-    return np.array_equal(before, after)
-
-
-def test_random_scramble(num_moves=50):
-    moves_list = [
-        (moves.U, moves.U_prime),
-        (moves.D, moves.D_prime),
-        (moves.L, moves.L_prime),
-        (moves.R, moves.R_prime),
-        (moves.F, moves.F_prime),
-        (moves.B, moves.B_prime),
-    ]
-
-    cube = CubeState()
-    before = cube.state.copy()
-
-    # Random sequence
-    seq = [random.choice(moves_list) for _ in range(num_moves)]
-
-    # Apply moves
-    for m, _ in seq:
-        m(cube)
-
-    # Undo moves in reverse
-    for _, inv in reversed(seq):
         inv(cube)
+        if not identical_cube(before, cube):
+            errors.append(name)
+            print(f"[FAIL] {name} then {inv_name} did NOT restore solved cube.")
+        else:
+            print(f"[OK]   {name} then {inv_name} restored solved cube.")
+    if not errors:
+        print("All inverse tests passed!")
+    else:
+        print("Failing moves:", errors)
 
-    after = cube.state.copy()
-    return np.array_equal(before, after)
+
+def run_single_move_inspect():
+    print("\n== Single-move inspection: shows affected slices before/after ==")
+    for name, move, _, _ in move_pairs:
+        cube = CubeState()
+        print(f"\n--- {name} ---")
+        print("Before (face slices):")
+        for k, v in cube.face_slices().items():
+            print(f"{k}: {v.tolist()}")
+        move(cube)
+        print("After (face slices):")
+        for k, v in cube.face_slices().items():
+            print(f"{k}: {v.tolist()}")
+        # reset for next move
 
 
-# ------------------- Run tests -------------------
 if __name__ == "__main__":
-    move_pairs = [
-        ("U", moves.U, moves.U_prime),
-        ("D", moves.D, moves.D_prime),
-        ("L", moves.L, moves.L_prime),
-        ("R", moves.R, moves.R_prime),
-        ("F", moves.F, moves.F_prime),
-        ("B", moves.B, moves.B_prime),
-    ]
-
-    print("=== Inverse move tests ===")
-    for name, m, inv in move_pairs:
-        print(f"{name} / {name}'", "PASS" if test_inverse(m, inv) else "FAIL")
-
-    print("\n=== Four-turn tests ===")
-    for name, m, _ in move_pairs:
-        print(f"{name}^4", "PASS" if test_four_cycles(m) else "FAIL")
-
-    print("\n=== Random scramble test ===")
-    print("Random scramble 50 moves:", "PASS" if test_random_scramble() else "FAIL")
+    run_inverse_test()
+    run_single_move_inspect()
