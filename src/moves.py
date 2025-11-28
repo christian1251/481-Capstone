@@ -48,9 +48,9 @@ def L(cube):
     u_col = cube.state[[0, 3, 6]].copy()
     f_col = cube.state[[36, 39, 42]].copy()
     d_col = cube.state[[9, 12, 15]].copy()
-    b_col = cube.state[[53, 50, 47]].copy()
+    b_col = cube.state[[47, 50, 53]].copy()
 
-    cube.state[[0, 3, 6]] = b_col
+    cube.state[[0, 3, 6]] = b_col[::-1]
     cube.state[[36, 39, 42]] = u_col
     cube.state[[9, 12, 15]] = f_col
     cube.state[[47, 50, 53]] = d_col[::-1]
@@ -68,12 +68,12 @@ def R(cube):
     u_col = cube.state[[2, 5, 8]].copy()
     f_col = cube.state[[38, 41, 44]].copy()
     d_col = cube.state[[11, 14, 17]].copy()
-    b_col = cube.state[[45, 48, 51]].copy()
+    b_col = cube.state[[45, 48, 51]].copy() 
 
-    cube.state[[2, 5, 8]] = b_col[::-1]
-    cube.state[[38, 41, 44]] = u_col
-    cube.state[[11, 14, 17]] = f_col
-    cube.state[[45, 48, 51]] = d_col[::-1]
+    cube.state[[2, 5, 8]]    = f_col
+    cube.state[[38, 41, 44]] = d_col
+    cube.state[[11, 14, 17]] = b_col[::-1]
+    cube.state[[45, 48, 51]] = u_col[::-1]
 
     cube.corner_orient = _corner_moves["R"](cube.corner_orient)
 
