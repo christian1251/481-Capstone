@@ -10,8 +10,64 @@ class Solver:
         self.cube = cube
         
     
-    def IDA_STAR():
-        pass
-    
-    def IDDFS():
-        pass
+    def IDA_STAR(self, max_depth, goal_state):
+        INF = float('inf')
+
+        h_func = getattr(self.cube, "heuristic", None)
+        if h_func is None:
+            def h_func(_): return 0
+
+        bound = h_func(goal_state)
+        path = []
+
+        def search(state, g, bound):
+            f = g + h_func(goal_state)
+            if f > bound:
+                return f
+            if state == goal_state:
+                return True
+            if (max_depth is not None) and (g >= max_depth):
+                return INF
+
+            min_t = INF
+            for move in state.get_moves():
+                state.do_move(move)
+                path.append(move)
+                t = search(state, g + 1, bound)
+                if t is True:
+                    return True
+                if t < min_t:
+                    min_t = t
+                path.pop()
+                state.undo_move(move)
+            return min_t
+
+        while True:
+            t = search(self.cube, 0, bound)
+            if t is True:
+                return list(path)
+            if t == INF:
+                return None
+            bound = t
+
+    def IDDFS(self, max_depth, goal_state):
+        path = []
+
+        def dls(state, depth):
+            if state == goal_state:
+                return True
+            if (max_depth is not None) and (depth <= 0):
+                return False
+
+            for move in state.get_moves():
+                state.do_move(move)
+                path.append(move)
+                if dls(state, depth - 1):
+                    return True
+                path.pop()
+                state.undo_move(move)
+            return False
+        for depth in range(max_depth + 1):
+            if dls(self.cube, depth):
+                return list(path)
+        return None
