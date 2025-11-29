@@ -86,31 +86,41 @@ class Renderer:
         faces = self.cube.get_faces()
 
         # camera wireframe cube
-        r = [0, 2]
+        r = [-1.5, 1.5]
         for s, e in combinations(np.array(list(product(r, r, r))), 2):
             if np.sum(np.abs(s - e)) == r[1] - r[0]:
                 ax.plot3D(*zip(s, e), color="w")
 
         # Face origins and movement vectors
-        face_vectors = {
-            'U': (np.array([0, 3, 0], dtype=float),
-                  np.array([1, 0, 0], dtype=float),
-                  np.array([0, 0, 1], dtype=float)),
-            'D': (np.array([0, 0, 0], dtype=float),
-                  np.array([1, 0, 0], dtype=float),
-                  np.array([0, 0, 1], dtype=float)),
-            'F': (np.array([0, 0, 3], dtype=float),
-                  np.array([1, 0, 0], dtype=float),
-                  np.array([0, 1, 0], dtype=float)),
-            'B': (np.array([3, 0, 0], dtype=float),
-                  np.array([-1, 0, 0], dtype=float),
-                  np.array([0, 1, 0], dtype=float)),
-            'R': (np.array([3, 0, 3], dtype=float),
-                  np.array([0, 0, -1], dtype=float),
-                  np.array([0, 1, 0], dtype=float)),
-            'L': (np.array([0, 0, 0], dtype=float),
-                  np.array([0, 0, 1], dtype=float),
-                  np.array([0, 1, 0], dtype=float)),
+            face_vectors = {
+            
+            'U': (np.array([-1.5,  1.5,  1.5], dtype=float),
+                  np.array([1.0,  0.0,  0.0], dtype=float),   
+                  np.array([0.0,  0.0, -1.0], dtype=float)), 
+
+         
+            'D': (np.array([-1.5, -1.5, -1.5], dtype=float),
+                  np.array([1.0,  0.0,  0.0], dtype=float),   
+                  np.array([0.0,  0.0,  1.0], dtype=float)), 
+
+           
+            'F': (np.array([-1.5, -1.5,  1.5], dtype=float),
+                  np.array([1.0,  0.0,  0.0], dtype=float),   
+                  np.array([0.0,  1.0,  0.0], dtype=float)), 
+
+           
+            'B': (np.array([ 1.5, -1.5, -1.5], dtype=float),
+                  np.array([-1.0,  0.0,  0.0], dtype=float), 
+                  np.array([ 0.0,  1.0,  0.0], dtype=float)),
+
+            'R': (np.array([ 1.5, -1.5,  1.5], dtype=float),
+                  np.array([0.0,  0.0, -1.0], dtype=float),  
+                  np.array([0.0,  1.0,  0.0], dtype=float)),  
+
+            
+            'L': (np.array([-1.5, -1.5, -1.5], dtype=float),
+                  np.array([0.0,  0.0,  1.0], dtype=float),   
+                  np.array([0.0,  1.0,  0.0], dtype=float)),  
         }
 
         # draw helper
@@ -138,6 +148,6 @@ class Renderer:
         for face_key, vecs in face_vectors.items():
             draw_face(face_key, *vecs)
 
-        # nice camera
+
         ax.set_aspect("auto")
         ax.set_autoscale_on(True)
