@@ -1,7 +1,8 @@
 # Represent the cube states using NumPy
 import numpy as np
+import moves 
 from typing import Dict, Tuple
-
+import random
 
 class CubeState:
     '''
@@ -96,4 +97,15 @@ class CubeState:
             
 
         return solved
+
+    def scramble(self, length=10, show_moves = False):
+        print("--------------SCRAMBLING CUBE--------------")
+        scramble = random.choices(list(moves.MOVES.values()), k=length)
+        for move in scramble:
+            move(self)
+            if show_moves:
+                 print(f"Applying Move:  {move.__name__} ...")
+                 self.print_cube()
+               
+        print("--------------SCRAMBLE DONE--------------")
 

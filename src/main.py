@@ -10,8 +10,11 @@ def main():
     
     cube.is_solved()
     cube.print_cube()
-    graphics = Renderer(cube)
-    graphics.start()
+    
+    cube.scramble(1, True)
+    cube.print_cube()
+    # graphics = Renderer(cube)
+    # graphics.start()
     
 
 if __name__ == "__main__":
