@@ -3,6 +3,8 @@ import numpy as np
 import moves 
 from typing import Dict, Tuple
 import random
+from corner_orient_pdb import load_pdb, pdb_heuristic
+
 
 class CubeState:
     '''
@@ -28,9 +30,19 @@ class CubeState:
                               for _ in range(9)], dtype=np.int8)
 
         self.corner_orient = [0] * 8
+        
+        try:
+            self.pdb = load_pdb()
+        except FileNotFoundError:
+            raise RuntimeError(
+                "corner_orient.pdb not found. Run build_corner_orient_pdb() first."
+            )
 
     def __repr__(self):
         return f"CubeState({self.state.tolist()})"
+    
+    def heuristic(self):
+        return pdb_heuristic(self, self.pdb)
 
     def get_faces(self) -> Dict[str, np.ndarray]:
         # This is the orginal idea for the state representation
@@ -79,7 +91,7 @@ class CubeState:
         } 
         
         
-    def is_solved(self):
+    def is_solved(self, silence = True):
         faces = self.face_slices()
         solved = True
         issues = []
@@ -90,20 +102,21 @@ class CubeState:
                 issues.append(face)
                 solved = False
                 
-        if not solved:
-            print(f"---NOT SOLVED---\nUnsolved Faces: {issues}")
-        else:
-            print("Cube Solved")
+        if not silence:     
+            if not solved:
+                print(f"---NOT SOLVED---\nUnsolved Faces: {issues}")
+            else:
+                print("Cube Solved")
             
 
         return solved
 
-    def scramble(self, length=10, show_moves = False):
+    def scramble(self, length=10, silence = True):
         print("--------------SCRAMBLING CUBE--------------")
         scramble = random.choices(list(moves.MOVES.values()), k=length)
         for move in scramble:
             move(self)
-            if show_moves:
+            if not silence:
                  print(f"Applying Move:  {move.__name__} ...")
                  self.print_cube()
                
