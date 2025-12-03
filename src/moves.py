@@ -145,3 +145,13 @@ MOVES = {
     "B": B,
     "B'": B_prime,
 }
+
+# Inverse lookup table for undo_move()
+INVERSE = {
+    "U": "U'", "U'": "U",
+    "D": "D'", "D'": "D",
+    "L": "L'", "L'": "L",
+    "R": "R'", "R'": "R",
+    "F": "F'", "F'": "F",
+    "B": "B'", "B'": "B",
+}

@@ -10,21 +10,21 @@ class Solver:
         self.cube = cube
         
     
-    def IDA_STAR(self, max_depth, goal_state):
+    def IDA_STAR(self, max_depth):
         INF = float('inf')
 
         h_func = getattr(self.cube, "heuristic", None)
         if h_func is None:
             def h_func(_): return 0
 
-        bound = h_func(goal_state)
+        bound = self.cube.heuristic()
         path = []
 
         def search(state, g, bound):
-            f = g + h_func(goal_state)
+            f = g + state.heuristic()
             if f > bound:
                 return f
-            if state == goal_state:
+            if self.cube.is_solved():
                 return True
             if (max_depth is not None) and (g >= max_depth):
                 return INF

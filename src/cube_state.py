@@ -117,3 +117,12 @@ class CubeState:
                
         print("--------------SCRAMBLE DONE--------------")
 
+    def get_moves(self):
+        return list(moves.MOVES.keys())
+
+    def do_move(self, move_name):
+        moves.MOVES[move_name](self)
+
+    def undo_move(self, move_name):
+        inv = moves.INVERSE[move_name]
+        moves.MOVES[inv](self)
