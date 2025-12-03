@@ -31,12 +31,7 @@ class CubeState:
 
         self.corner_orient = [0] * 8
         
-        try:
-            self.pdb = load_pdb()
-        except FileNotFoundError:
-            raise RuntimeError(
-                "corner_orient.pdb not found. Run build_corner_orient_pdb() first."
-            )
+        self.pdb = load_pdb()
 
     def __repr__(self):
         return f"CubeState({self.state.tolist()})"
