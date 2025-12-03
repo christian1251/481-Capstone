@@ -46,6 +46,10 @@ class Renderer:
         axes_btn = plt.axes([0.30, 0.01, 0.1, 0.075])
         bB = Button(axes_btn, 'B')
         bB.on_clicked(self._on_B)
+        
+        axes_btn = plt.axes([0.10, 0.01, 0.1, 0.075])
+        bScramble = Button(axes_btn, 'Scramble')
+        bScramble.on_clicked(self._on_Scramble)
         plt.show()
 
     # button callbacks
@@ -71,6 +75,10 @@ class Renderer:
 
     def _on_B(self, event):
         moves.B(self.cube)
+        self._redraw()
+        
+    def _on_Scramble(self, event):
+        self.cube.scramble()
         self._redraw()
 
     def _redraw(self):
