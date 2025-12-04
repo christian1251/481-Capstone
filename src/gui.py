@@ -8,6 +8,8 @@ from itertools import product, combinations
 import mpl_toolkits.mplot3d.art3d as art3d
 from cube_state import CubeState
 import moves
+from algo import Solver
+import threading
 
 class Renderer:
     def __init__(self, cube):
@@ -23,6 +25,7 @@ class Renderer:
         self._draw_cube(self.ax)
 
         # Buttons
+        # Regular Moves
         axes_btn = plt.axes([0.80, 0.01, 0.1, 0.075])
         bU = Button(axes_btn, 'U')
         bU.on_clicked(self._on_U)
@@ -47,11 +50,41 @@ class Renderer:
         bB = Button(axes_btn, 'B')
         bB.on_clicked(self._on_B)
         
+        # Inverse Buttons
+        axes_btn = plt.axes([0.80, 0.09, 0.1, 0.075])
+        bUPrime = Button(axes_btn, "U'")
+        bUPrime.on_clicked(self._on_UPrime)
+        
+        axes_btn = plt.axes([0.70, 0.09, 0.1, 0.075])
+        bDPrime = Button(axes_btn, "D'")
+        bDPrime.on_clicked(self._on_DPrime)
+
+        axes_btn = plt.axes([0.60, 0.09, 0.1, 0.075])
+        bLPrime = Button(axes_btn, "L'")
+        bLPrime.on_clicked(self._on_LPrime)
+
+        axes_btn = plt.axes([0.50, 0.09, 0.1, 0.075])
+        bRPrime = Button(axes_btn, "R'")
+        bRPrime.on_clicked(self._on_RPrime)
+
+        axes_btn = plt.axes([0.40, 0.09, 0.1, 0.075])
+        bFPrime = Button(axes_btn, "F'")
+        bFPrime.on_clicked(self._on_FPrime)
+        
+        axes_btn = plt.axes([0.30, 0.09, 0.1, 0.075])
+        bBPrime = Button(axes_btn, "B'")
+        bBPrime.on_clicked(self._on_BPrime)
+        
+        
         axes_btn = plt.axes([0.10, 0.01, 0.1, 0.075])
         bScramble = Button(axes_btn, 'Scramble')
         bScramble.on_clicked(self._on_Scramble)
+        
+        axes_btn = plt.axes([0.0, 0.01, 0.1, 0.075])
+        bSolve = Button(axes_btn, 'Solve')
+        bSolve.on_clicked(self._on_Solve)
+    
         plt.show()
-
     # button callbacks
     def _on_U(self, event):
         moves.U(self.cube)
@@ -77,9 +110,41 @@ class Renderer:
         moves.B(self.cube)
         self._redraw()
         
-    def _on_Scramble(self, event):
-        self.cube.scramble()
+    def _on_UPrime(self, event):
+        moves.Uprime(self.cube)
         self._redraw()
+
+    def _on_DPrime(self, event):
+        moves.Dprime(self.cube)
+        self._redraw()
+
+    def _on_RPrime(self, event):
+        moves.Rprime(self.cube)
+        self._redraw()
+
+    def _on_LPrime(self, event):
+        moves.Lprime(self.cube)
+        self._redraw()
+
+    def _on_FPrime(self, event):
+        moves.Fprime(self.cube)
+        self._redraw()
+
+    def _on_BPrime(self, event):
+        moves.Bprime(self.cube)
+        self._redraw()
+        
+    def _on_Scramble(self, event):
+        self.cube.scramble(5, False)
+        self._redraw()
+        
+    def _on_Solve(self, event):
+        threading.Thread(target=self._solve_thread).start()
+
+    def _solve_thread(self):
+        solver = Solver(self.cube)
+        solution = solver.IDA_STAR(10)
+        print("Solution:", solution)
 
     def _redraw(self):
         """Clear and redraw cube"""
@@ -87,7 +152,7 @@ class Renderer:
         self._draw_cube(self.ax)
         self.fig.canvas.draw_idle()
         self.cube.print_cube()
-
+        
 
     def _draw_cube(self, ax):
 

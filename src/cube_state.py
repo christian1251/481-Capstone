@@ -106,7 +106,7 @@ class CubeState:
 
         return solved
 
-    def scramble(self, length=10, silence = True):
+    def scramble(self, length=5, silence = True):
         print("--------------SCRAMBLING CUBE--------------")
         scramble = random.choices(list(moves.MOVES.values()), k=length)
         for move in scramble:

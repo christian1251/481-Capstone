@@ -3,13 +3,16 @@ from cube_state import CubeState
 import moves
 from gui import Renderer
 from algo import Solver
+from corner_orient_pdb import build_corner_orient_pdb, save_pdb
 
 def main():
-    print("hello world")
-
-    cube = CubeState()
+    print("Building PDB")
+    pdb = build_corner_orient_pdb()
+    save_pdb(pdb)
+    print(f"Done.")
     
-    cube.is_solved()
+    cube = CubeState()
+
     cube.print_cube()
     
     # graphics = Renderer(cube)
@@ -18,10 +21,15 @@ def main():
     # moves.F(cube)
     # moves.U(cube)
     # moves.R(cube)
+    # moves.Bprime(cube)
+    # moves.U(cube)
+    # moves.L(cube)
+    
+    
 
-    # solver = Solver(cube)
-    # solution = solver.IDA_STAR(10)
-    # print("Solution:", solution)
+    solver = Solver(cube)
+    solution = solver.IDA_STAR(10)
+    print("Solution:", solution)
     
 if __name__ == "__main__":
     main()

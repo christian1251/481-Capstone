@@ -3,6 +3,7 @@
 #   - IDA* algorithm
 
 # Could make our own or use AIMA from prev hw
+import time
 
 class Solver:
     
@@ -11,6 +12,7 @@ class Solver:
         
     
     def IDA_STAR(self, max_depth):
+        print("Solving...")
         INF = float('inf')
 
         h_func = getattr(self.cube, "heuristic", None)
@@ -43,8 +45,12 @@ class Solver:
             return min_t
 
         while True:
+            start = time.time()
             t = search(self.cube, 0, bound)
             if t is True:
+                end = time.time()
+                length = end - start
+                print(f"Total Time to Solve: {length}")
                 return list(path)
             if t == INF:
                 return None
