@@ -102,7 +102,6 @@ class CubeState:
                 print(f"---NOT SOLVED---\nUnsolved Faces: {issues}")
             else:
                 print("Cube Solved")
-            
 
         return solved
 

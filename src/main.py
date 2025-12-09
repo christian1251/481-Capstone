@@ -1,6 +1,7 @@
 # Entry point
 from cube_state import CubeState
 import moves
+import numpy as np
 from gui import Renderer
 from algo import Solver
 from corner_orient_pdb import build_corner_orient_pdb, save_pdb
@@ -23,7 +24,7 @@ def main():
     graphics.start()
 
     # moves.F(cube)
-    # moves.U(cube)
+    # moves.U(cube) 
     # moves.R(cube)
     # moves.Bprime(cube)
     # moves.U(cube)

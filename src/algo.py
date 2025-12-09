@@ -4,6 +4,7 @@
 
 # Could make our own or use AIMA from prev hw
 import time
+from moves import INVERSE
 
 class Solver:
     
@@ -22,24 +23,36 @@ class Solver:
         bound = self.cube.heuristic()
         path = []
 
-        def search(state, g, bound):
+        def search(state, g, bound, last_move=None):
             f = g + state.heuristic()
             if f > bound:
                 return f
-            if self.cube.is_solved():
+            if state.is_solved():
                 return True
             if (max_depth is not None) and (g >= max_depth):
                 return INF
 
             min_t = INF
             for move in state.get_moves():
+                
+                if last_move is not None and INVERSE.get(move) == last_move:
+                    continue
+                
+                if last_move is not None and move[0] == last_move[0]:
+                    continue
+
+                
                 state.do_move(move)
                 path.append(move)
+                
                 t = search(state, g + 1, bound)
+                
                 if t is True:
                     return True
+                
                 if t < min_t:
                     min_t = t
+                    
                 path.pop()
                 state.undo_move(move)
             return min_t

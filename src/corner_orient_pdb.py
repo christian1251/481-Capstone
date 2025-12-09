@@ -201,19 +201,14 @@ def load_pdb(filename: str = PDB_FILENAME) -> List[int]:
 def get_corner_orient_from_cube(cube):
     orient = [0]*8
 
-    for corner_idx, stickers in enumerate(CORNER_STICKERS):
-        ref = stickers[0]           # index of reference sticker
-        ref_color = cube.state[ref] # actual color currently on that sticker
+    for i, stickers in enumerate(CORNER_STICKERS):
+        colors = [cube.state[idx] for idx in stickers]
 
-        # What face is this sticker sitting on
-        # Determine by which center color it matches.
-
-        if ref_color == cube.WHITE or ref_color == cube.YELLOW:
-            orient[corner_idx] = 0
-        elif ref_color == cube.RED or ref_color == cube.ORANGE:
-            orient[corner_idx] = 1
-        else:  # GREEN or BLUE
-            orient[corner_idx] = 2
+        if cube.WHITE in colors or cube.YELLOW in colors:
+            pos = colors.index(cube.WHITE) if cube.WHITE in colors else colors.index(cube.YELLOW)
+            orient[i] = pos % 3
+        else:
+            orient[i] = 0  
 
     return orient
 
