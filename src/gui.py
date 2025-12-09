@@ -10,6 +10,7 @@ from cube_state import CubeState
 import moves
 from algo import Solver
 import threading
+import copy
 
 class Renderer:
     def __init__(self, cube):
@@ -142,7 +143,8 @@ class Renderer:
         threading.Thread(target=self._solve_thread).start()
 
     def _solve_thread(self):
-        solver = Solver(self.cube)
+        cube_copy = copy.deepcopy(self.cube)
+        solver = Solver(cube_copy)
         solution = solver.IDA_STAR(10)
         print("Solution:", solution)
 

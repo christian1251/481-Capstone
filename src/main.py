@@ -19,8 +19,8 @@ def main():
 
     cube.print_cube()
 
-    # graphics = Renderer(cube)
-    # graphics.start()
+    graphics = Renderer(cube)
+    graphics.start()
 
     # moves.F(cube)
     # moves.U(cube)
@@ -29,9 +29,9 @@ def main():
     # moves.U(cube)
     # moves.L(cube)
 
-    solver = Solver(cube)
-    solution = solver.IDA_STAR(10)
-    print("Solution:", solution)
+    # solver = Solver(cube)
+    # solution = solver.IDA_STAR(10)
+    # print("Solution:", solution)
 
 
 if __name__ == "__main__":
