@@ -11,6 +11,7 @@ import moves
 from algo import Solver
 import threading
 import copy
+from move_eval import evaluate_move
 
 class Renderer:
     def __init__(self, cube):
@@ -88,50 +89,62 @@ class Renderer:
         plt.show()
     # button callbacks
     def _on_U(self, event):
+        evaluate_move(self.cube, "U")
         moves.U(self.cube)
         self._redraw()
 
     def _on_D(self, event):
+        evaluate_move(self.cube, "D")
         moves.D(self.cube)
         self._redraw()
 
     def _on_R(self, event):
+        evaluate_move(self.cube, "R")
         moves.R(self.cube)
         self._redraw()
 
     def _on_L(self, event):
+        evaluate_move(self.cube, "L")
         moves.L(self.cube)
         self._redraw()
 
     def _on_F(self, event):
+        evaluate_move(self.cube, "F")
         moves.F(self.cube)
         self._redraw()
 
     def _on_B(self, event):
+        evaluate_move(self.cube, "B")
         moves.B(self.cube)
         self._redraw()
         
     def _on_UPrime(self, event):
+        evaluate_move(self.cube, "U'")
         moves.Uprime(self.cube)
         self._redraw()
 
     def _on_DPrime(self, event):
+        evaluate_move(self.cube, "D'")
         moves.Dprime(self.cube)
         self._redraw()
 
     def _on_RPrime(self, event):
+        evaluate_move(self.cube, "R'")
         moves.Rprime(self.cube)
         self._redraw()
 
     def _on_LPrime(self, event):
+        evaluate_move(self.cube, "L'")
         moves.Lprime(self.cube)
         self._redraw()
 
     def _on_FPrime(self, event):
+        evaluate_move(self.cube, "F'")
         moves.Fprime(self.cube)
         self._redraw()
 
     def _on_BPrime(self, event):
+        evaluate_move(self.cube, "B'")
         moves.Bprime(self.cube)
         self._redraw()
         
@@ -150,10 +163,12 @@ class Renderer:
 
     def _redraw(self):
         """Clear and redraw cube"""
+        print(20 * "-")
         self.ax.cla()
         self._draw_cube(self.ax)
         self.fig.canvas.draw_idle()
         self.cube.print_cube()
+        print(20 * "-")
         
 
     def _draw_cube(self, ax):

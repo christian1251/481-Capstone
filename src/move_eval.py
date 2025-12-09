@@ -43,6 +43,22 @@ def rank_moves(cube: CubeState) -> dict:
     return dict(sorted(ranking.items(), key=lambda kv: kv[1]))
 
 
+def evaluate_move(cube: CubeState, move: str):
+    before = combined_heuristic(cube)
+
+    cube.do_move(move)
+    after = combined_heuristic(cube)
+    cube.undo_move(move)
+
+    if after < before:
+        result = '\033[92m' + "GOOD" +  '\033[0m'
+    elif after > before:
+        result = '\033[91m' + "BAD" + '\033[0m'
+    else:
+        result = "NEUTRAL"
+
+    print(f"Move {move}: {result} ({before} → {after})")
+
 if __name__ == "__main__":
     cube = CubeState()  # Fully completed cube
     print("Current heuristic:", combined_heuristic(cube))
